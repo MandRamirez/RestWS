@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Alunos</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    input { margin: 5px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h1>Cadastro de Alunos</h1>
+
+  <input type="hidden" id="id">
+  <input type="text" id="nome" placeholder="Nome">
+  <input type="text" id="matricula" placeholder="Matrícula">
+  <input type="text" id="curso" placeholder="Curso">
+  <button onclick="salvar()">Salvar</button>
+  <button onclick="limpar()">Limpar</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Matrícula</th>
+        <th>Curso</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-alunos"></tbody>
+  </table>
+
+  <script>
+    const API_URL = '/alunos';
+
+    function listar() {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          const tabela = document.getElementById('tabela-alunos');
+          tabela.innerHTML = '';
+          data.forEach(aluno => {
+            tabela.innerHTML += `
+              <tr>
+                <td>${aluno.id}</td>
+                <td>${aluno.nome}</td>
+                <td>${aluno.matricula}</td>
+                <td>${aluno.curso}</td>
+                <td>
+                  <button onclick="editar(${aluno.id}, '${aluno.nome}', '${aluno.matricula}', '${aluno.curso}')">Editar</button>
+                  <button onclick="deletar(${aluno.id})">Excluir</button>
+                </td>
+              </tr>
+            `;
+          });
+        });
+    }
+
+    function salvar() {
+      const id = document.getElementById('id').value;
+      const aluno = {
+        nome: document.getElementById('nome').value,
+        matricula: document.getElementById('matricula').value,
+        curso: document.getElementById('curso').value
+      };
+
+      const metodo = id ? 'PUT' : 'POST';
+      const url = id ? `${API_URL}/${id}` : API_URL;
+
+      fetch(url, {
+        method: metodo,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(aluno)
+      }).then(() => {
+        limpar();
+        listar();
+      });
+    }
+
+    function editar(id, nome, matricula, curso) {
+      document.getElementById('id').value = id;
+      document.getElementById('nome').value = nome;
+      document.getElementById('matricula').value = matricula;
+      document.getElementById('curso').value = curso;
+    }
+
+    function deletar(id) {
+      if (confirm("Tem certeza que deseja excluir este aluno?")) {
+        fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+          .then(() => listar());
+      }
+    }
+
+    function limpar() {
+      document.getElementById('id').value = '';
+      document.getElementById('nome').value = '';
+      document.getElementById('matricula').value = '';
+      document.getElementById('curso').value = '';
+    }
+
+    listar();
+  </script>
+</body>
+</html>
