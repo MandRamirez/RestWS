@@ -1,16 +1,38 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <title>Cadastro de Alunos</title>
   <style>
-    body { font-family: Arial; margin: 20px; }
-    input { margin: 5px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f0f0f0; }
+    body {
+      font-family: Arial;
+      margin: 20px;
+    }
+
+    input {
+      margin: 5px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
   </style>
 </head>
+
 <body>
   <h1>Cadastro de Alunos</h1>
 
@@ -35,7 +57,7 @@
   </table>
 
   <script>
-    const API_URL = 'http://localhost:8080/employees';
+    const API_URL = 'http://localhost:8080/alunos';
 
     function listar() {
       fetch(API_URL)
@@ -45,17 +67,17 @@
           tabela.innerHTML = '';
           data.forEach(aluno => {
             tabela.innerHTML += `
-              <tr>
-                <td>${aluno.id}</td>
-                <td>${aluno.nome}</td>
-                <td>${aluno.matricula}</td>
-                <td>${aluno.curso}</td>
-                <td>
-                  <button onclick="editar(${aluno.id}, '${aluno.nome}', '${aluno.matricula}', '${aluno.curso}')">Editar</button>
-                  <button onclick="deletar(${aluno.id})">Excluir</button>
-                </td>
-              </tr>
-            `;
+            <tr>
+              <td>${aluno.id}</td>
+              <td>${aluno.nome}</td>
+              <td>${aluno.matricula}</td>
+              <td>${aluno.curso}</td>
+              <td>
+                <button onclick="editar(${aluno.id}, '${aluno.nome}', '${aluno.matricula}', '${aluno.curso}')">Editar</button>
+                <button onclick="deletar(${aluno.id})">Excluir</button>
+              </td>
+            </tr>
+          `;
           });
         });
     }
@@ -104,5 +126,7 @@
 
     listar();
   </script>
+
 </body>
+
 </html>
